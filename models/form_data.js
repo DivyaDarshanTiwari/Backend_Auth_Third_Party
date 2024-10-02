@@ -6,6 +6,11 @@ const testSchema = new Schema({
   name: String,
   age: Number,
   location: String,
+  address: String,
+  photo: {
+    data: req.file.buffer,
+    contentType: req.file.mimetype,
+  },
   subject: String,
 });
 

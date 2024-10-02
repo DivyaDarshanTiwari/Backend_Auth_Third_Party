@@ -1,217 +1,181 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>HTML + CSS</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="style.css" />
     <style>
-      body {
-        background-color: #121212;
-        color: #ffffff;
-        font-family: Arial, sans-serif;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        margin: 0;
-        padding: 20px;
-        height: 90vh;
-      }
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin: 0;
+            padding: 20px;
+            height: 90vh;
+        }
 
-      form {
-        background-color: #1e1e1e;
-        padding: 4rem;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        max-width: 500px;
-        margin: 0 auto;
-      }
+        form {
+            background-color: #1e1e1e;
+            padding: 4rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            margin: 0 auto;
+        }
 
-      label {
-        display: block;
-        margin-bottom: 8px;
-        color: #ffffff;
-      }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ffffff;
+        }
 
-      input[type="text"],
-      input[type="date"],
-      select {
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 15px;
-        border: 1px solid #444;
-        border-radius: 4px;
-        background-color: #2e2e2e;
-        color: #ffffff;
-      }
+        input[type="text"],
+        input[type="date"],
+        input[type="file"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #444;
+            border-radius: 4px;
+            background-color: #2e2e2e;
+            color: #ffffff;
+        }
 
-      input[type="submit"] {
-        width: 100%;
-        padding: 10px;
-        background-color: #6200ea;
-        color: #ffffff;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-      }
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #6200ea;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
 
-      input[type="submit"]:hover {
-        background-color: #3700b3;
-      }
+        input[type="submit"]:hover {
+            background-color: #3700b3;
+        }
 
-      #error_name,
-      #error_age {
-        color: red;
-        font-size: 0.9em;
-      }
+        #error_name,
+        #error_age {
+            color: red;
+            font-size: 0.9em;
+        }
     </style>
-  </head>
-  <body>
-    <form id="myForm" action="/registration" method="post">
-      <div>
-        <label for="name">Name</label>
-        <input type="text" name="name" id="name" placeholder="name" />
-        <div id="error_name"></div>
-      </div>
-      <div>
-        <label for="age">Age</label>
-        <input type="date" name="age" id="age" placeholder="DOB" />
-        <div id="error_age"></div>
-      </div>
-      <div>
-        <label for="location">Location</label>
-        <input
-          type="text"
-          name="location"
-          id="location"
-          placeholder="location"
-        />
-      </div>
-      <label for="subject">Subjects:</label>
-      <select name="subject" id="subject">
-        <option value="backend">Backend</option>
-        <option value="dcn">DNC</option>
-        <option value="ai">AI</option>
-        <option value="ml">ML</option>
-      </select>
-      <input type="submit" value="Submit" />
+</head>
+<body>
+    <form id="myForm" action="/registration" method="post" enctype="multipart/form-data">
+        <div>
+            <label for="name">Name</label>
+            <input type="text" name="name" id="name" placeholder="name" />
+            <div id="error_name"></div>
+        </div>
+        <div>
+            <label for="age">Age</label>
+            <input type="date" name="age" id="age" placeholder="DOB" />
+            <div id="error_age"></div>
+        </div>
+        <div>
+            <label for="location">Location</label>
+            <input type="text" name="location" id="location" placeholder="location" />
+        </div>
+        <div>
+            <label for="address">Address</label>
+            <textarea name="address" id="address" placeholder="Address"></textarea>
+        </div>
+        <div>
+            <label for="file">File</label>
+            <input type="file" name="file" id="file" />
+        </div>
+        <label for="subject">Subjects:</label>
+        <select name="subject" id="subject">
+            <option value="backend">Backend</option>
+            <option value="dcn">DNC</option>
+            <option value="ai">AI</option>
+            <option value="ml">ML</option>
+        </select>
+        <input type="submit" value="Submit" />
     </form>
 
     <script>
-      // const token = localStorage.getItem("token");
-      // event.preventDefault();
-
-      // console.log(token);
-      // // If a token exists, make a request to the protected route
-      // if (token) {
-      //   fetch("/welcome", {
-      //     method: "POST",
-      //     headers: {
-      //       Authorization: `Bearer ${token}`, // Attach the token in the Authorization header
-      //     },
-      //   })
-      //     .then((response) => {
-      //       if (!response.ok) {
-      //         throw new Error("Failed to access protected route");
-      //       }
-      //       return response.json();
-      //     })
-      //     .then((data) => {
-      //       console.log("Protected data:", data);
-      //       // Display data or handle it as needed (e.g., display user info on the page)
-      //       document.body.innerHTML += `<p>Welcome, ${data.username}!</p>`;
-      //     })
-      //     .catch((err) => {
-      //       console.error("Error accessing protected route:", err);
-      //       alert("Error: Unable to access protected data.");
-      //     });
-      // } else {
-      //   alert("No token found. Please log in.");
-      //   // Optionally, redirect to login page if token is missing
-      //   window.location.href = "/login";
-      // }
-      document
-        .getElementById("myForm")
-        .addEventListener("submit", function (event) {
-          event.preventDefault();
-          submitted();
+        document.getElementById("myForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+            submitted();
         });
 
-      function submitted() {
-        let userName = document.getElementById("name").value;
-        let error = false;
-        const regex = /[^a-zA-Z0-9 ]/;
+        function submitted() {
+            let userName = document.getElementById("name").value;
+            let error = false;
+            const regex = /[^a-zA-Z0-9 ]/;
 
-        if (regex.test(userName)) {
-          document.getElementById("error_name").innerHTML =
-            "Do not enter special characters";
-          error = true;
-        } else {
-          document.getElementById("error_name").innerHTML = "";
+            if (regex.test(userName)) {
+                document.getElementById("error_name").innerHTML = "Do not enter special characters";
+                error = true;
+            } else {
+                document.getElementById("error_name").innerHTML = "";
+            }
+
+            let age = document.getElementById("age").value;
+            if (age) {
+                let dob = new Date(age);
+                let birthYear = dob.getFullYear();
+
+                if (birthYear > 2010) {
+                    document.getElementById("error_age").innerHTML = "Invalid age";
+                    error = true;
+                } else {
+                    document.getElementById("error_age").innerHTML = "";
+                }
+
+                if (error) {
+                    return;
+                }
+            } else {
+                document.getElementById("error_age").innerHTML = "Please enter your date of birth.";
+                error = true;
+            }
+
+            let userLocation = document.getElementById("location").value;
+            let userAddress = document.getElementById("address").value;
+            let subject = document.getElementById("subject").value;
+            let fileInput = document.getElementById("file");
+            let file = fileInput.files[0];
+
+            if (userName && age && userLocation && userAddress && subject && file) {
+                let fileSizeInMB = (file.size / (1024 * 1024)).toFixed(2);
+                alert(`File size: ${fileSizeInMB} MB`);
+
+                const formData = new FormData();
+                formData.append('name', userName);
+                formData.append('age', age);
+                formData.append('location', userLocation);
+                formData.append('address', userAddress);
+                formData.append('subject', subject);
+                formData.append('file', file);
+
+                fetch('/user/user_data', {
+                    method: 'POST',
+                    body: formData,
+                })
+                .then((result) => {
+                    alert("Form submitted successfully! ");
+                })
+                .catch((error) => {
+                    alert("Error submitting form: " + error);
+                });
+            } else {
+                alert("Please enter all the parameters.");
+            }
         }
-
-        let age = document.getElementById("age").value;
-        if (age) {
-          let dob = new Date(age);
-          let birthYear = dob.getFullYear();
-
-          if (birthYear > 2010) {
-            document.getElementById("error_age").innerHTML = "Invalid age";
-            error = true;
-          } else {
-            document.getElementById("error_age").innerHTML = "";
-          }
-
-          if (error) {
-            return;
-          }
-        } else {
-          document.getElementById("error_age").innerHTML =
-            "Please enter your date of birth.";
-          error = true;
-        }
-
-        let userLocation = document.getElementById("location").value;
-        let subject = document.getElementById("subject").value;
-
-        if (userName && age && userLocation && subject) {
-          alert(
-            "Name: " +
-              userName +
-              "\nAge: " +
-              (new Date().getFullYear() - new Date(age).getFullYear()) +
-              "\nLocation: " +
-              userLocation +
-              "\nSubject: " +
-              subject
-          );
-          const data = {
-            name: userName,
-            age: age,
-            location: userLocation,
-            subject: subject,
-          };
-
-          fetch("/user/user_data", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-          })
-            .then((response) => response.json())
-            .then((result) => {
-              alert("Form submitted successfully! " + JSON.stringify(result));
-            })
-            .catch((error) => {
-              alert("Error submitting form: " + error);
-            });
-        } else {
-          alert("Please enter all the parameters.");
-        }
-      }
     </script>
-  </body>
+</body>
 </html>

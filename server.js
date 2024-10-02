@@ -29,6 +29,10 @@ app.get("/welcome", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "welcome.html"));
 });
 
+app.get("/otp",(req,res)=>{
+  res.sendFile(path.join(__dirname,"public","OTP.html"));
+})
+
 // Routes
 app.use("/api/auth", require("./routes/auth"));
 app.use("/user", user_data);
