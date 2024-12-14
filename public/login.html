@@ -139,8 +139,24 @@
 
             localStorage.setItem("token", token);
             console.log(data);
-            const router = await fetch("");
-            window.location.href = "/welcome";
+            // const router = await fetch("");
+            // window.location.href = "/welcome";
+            const welcomeResponse = await fetch(
+              "http://localhost:5000/welcome",
+              {
+                method: "GET",
+                headers: {
+                  Authorization: `Bearer ${token}`, // Ensure you have the correct token here
+                },
+              }
+            );
+
+            if (welcomeResponse.ok) {
+              // Redirect to the welcome page after successful authentication
+              window.location.href = "/welcome"; // Simple client-side redirect
+            } else {
+              alert("Unable to access the welcome page");
+            }
           } else {
             console.log(response);
             alert("Login failed");
