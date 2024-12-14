@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login</title>
+    <title>Login with Password and OTP</title>
     <style>
       body {
         background-color: #121212;
@@ -25,19 +25,21 @@
 
       form {
         background-color: #1e1e1e;
-        padding: 4rem;
+        padding: 2rem;
         border-radius: 8px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        width: 100%;
+        max-width: 400px;
       }
 
       label {
         display: block;
         margin-bottom: 8px;
-        color: #ffffff;
       }
 
       input[type="text"],
-      input[type="password"] {
+      input[type="password"],
+      input[type="number"] {
         width: 100%;
         padding: 10px;
         margin-bottom: 15px;
@@ -76,24 +78,37 @@
       a:hover {
         text-decoration: underline;
       }
+
+      .hidden {
+        display: none;
+      }
     </style>
   </head>
   <body>
     <h2>Login</h2>
-    <form id="loginForm">
-      <label for="username">Username:</label>
-      <input type="text" id="username" name="username" required />
-      <br />
+    <form id="passwordLoginForm">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required />
       <label for="password">Password:</label>
       <input type="password" id="password" name="password" required />
-      <br />
-      <button type="submit">Login</button>
+      <button type="button" id="loginButton">Login</button>
     </form>
-    <p>Don't have an account? <a href="signup.html">Sign up</a></p>
+
+    <form id="otpForm" class="hidden">
+      <label for="phone">Phone Number:</label>
+      <input type="number" id="phone" name="phone" required />
+      <button type="button" id="getOtpButton">Get OTP</button>
+      <div id="otpSection" class="hidden">
+        <label for="otp">Enter OTP:</label>
+        <input type="number" id="otp" name="otp" required />
+        <button type="button" id="verifyOtpButton">Verify OTP</button>
+      </div>
+    </form>
 
     <div id="weather">
       <p>Fetching weather...</p>
     </div>
+
     <script>
       async function getWeather() {
         try {
@@ -104,8 +119,7 @@
             <img src="${data.current.condition.icon}" alt="Weather icon">
             <p>Weather in Dehradun:</p>
             <p>Temperature: ${data.current.temp_c}°C</p>
-            <p>Condition: ${data.current.condition.text}</p>
-          `;
+            <p>Condition: ${data.current.condition.text}</p>`;
         } catch (error) {
           console.error("Error fetching weather data:", error);
           document.getElementById("weather").innerHTML =
@@ -113,40 +127,102 @@
         }
       }
 
-      // Call the function when the page loads
       window.onload = getWeather;
 
       document
-        .getElementById("loginForm")
-        .addEventListener("submit", async (event) => {
-          event.preventDefault();
-          const username = document.getElementById("username").value;
+        .getElementById("loginButton")
+        .addEventListener("click", async () => {
+          const username = document.getElementById("name").value;
           const password = document.getElementById("password").value;
 
-          const response = await fetch("/api/auth/login", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ username, password }),
-          });
+          try {
+            const response = await fetch("/api/auth/login", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ username, password }),
+            });
 
-          const data = await response.json();
+            if (response.ok) {
+              const data = await response.json();
+              const token = data.token;
 
-          if (response.ok) {
-            alert("Login successful");
+              // Store the token locally
+              localStorage.setItem("token", token);
 
-            const token = data.token;
+              // Show OTP section
+              document
+                .getElementById("passwordLoginForm")
+                .classList.add("hidden");
+              document.getElementById("otpForm").classList.remove("hidden");
 
-            // Store the token locally
-            localStorage.setItem("token", token);
-            console.log(data);
+              alert("Login successful. Please verify with OTP.");
+            } else {
+              const errorData = await response.json();
+              alert(errorData.message || "Login failed");
+            }
+          } catch (error) {
+            console.error("Error logging in:", error);
+            alert("Error logging in");
+          }
+        });
 
-            // Redirect to the welcome page with the token in the query string
-            window.location.href = `/welcome?token=${token}`;
-          } else {
-            console.log(response);
-            alert("Login failed");
+      document
+        .getElementById("getOtpButton")
+        .addEventListener("click", async () => {
+          let phone = document.getElementById("phone").value;
+          phone = "+91" + phone;
+
+          try {
+            const response = await fetch("OTP/api/auth/get-otp", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ phone }),
+            });
+
+            if (response.ok) {
+              alert("OTP sent successfully");
+              document.getElementById("otpSection").classList.remove("hidden");
+            } else {
+              const errorData = await response.json();
+              alert(errorData.message || "Failed to send OTP");
+            }
+          } catch (error) {
+            console.error("Error sending OTP:", error);
+            alert("Error sending OTP");
+          }
+        });
+
+      document
+        .getElementById("verifyOtpButton")
+        .addEventListener("click", async () => {
+          const otp = document.getElementById("otp").value;
+          let phone = document.getElementById("phone").value;
+          phone = "+91" + phone;
+          let token = localStorage.getItem("token");
+
+          try {
+            const response = await fetch("OTP/api/auth/verify-otp", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ phone, otp }),
+            });
+
+            if (response.ok) {
+              alert("OTP verified successfully");
+              window.location.href = `/welcome?token=${token}`;
+            } else {
+              const data = await response.json();
+              alert(data.message || "OTP verification failed");
+            }
+          } catch (error) {
+            console.error("Error verifying OTP:", error);
+            alert("Error verifying OTP");
           }
         });
     </script>

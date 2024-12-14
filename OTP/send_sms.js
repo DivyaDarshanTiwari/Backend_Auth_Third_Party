@@ -162,11 +162,7 @@ app.post("/api/auth/verify-otp", async (req, res) => {
       });
 
     if (verificationCheck.status === "approved") {
-      // Generate a token (if required for further authentication)
-      const token = "sample-auth-token"; // Replace with a real token from your auth logic
-      return res
-        .status(200)
-        .json({ message: "OTP verified successfully", token });
+      return res.status(200).json({ message: "OTP verified successfully" });
     } else {
       return res.status(400).json({ message: "Invalid or expired OTP" });
     }
