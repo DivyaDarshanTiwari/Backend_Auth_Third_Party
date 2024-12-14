@@ -101,11 +101,11 @@
           const data = await response.json();
           const weatherDiv = document.getElementById("weather");
           weatherDiv.innerHTML = `
-          <img src="${data.current.condition.icon}" alt="Weather icon">
-          <p>Weather in Dehradun:</p>
-          <p>Temperature: ${data.current.temp_c}°C</p>
-          <p>Condition: ${data.current.condition.text}</p>
-        `;
+            <img src="${data.current.condition.icon}" alt="Weather icon">
+            <p>Weather in Dehradun:</p>
+            <p>Temperature: ${data.current.temp_c}°C</p>
+            <p>Condition: ${data.current.condition.text}</p>
+          `;
         } catch (error) {
           console.error("Error fetching weather data:", error);
           document.getElementById("weather").innerHTML =
@@ -115,6 +115,7 @@
 
       // Call the function when the page loads
       window.onload = getWeather;
+
       document
         .getElementById("loginForm")
         .addEventListener("submit", async (event) => {
@@ -122,7 +123,7 @@
           const username = document.getElementById("username").value;
           const password = document.getElementById("password").value;
 
-          const response = await fetch("api/auth/login", {
+          const response = await fetch("/api/auth/login", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -137,26 +138,12 @@
 
             const token = data.token;
 
+            // Store the token locally
             localStorage.setItem("token", token);
             console.log(data);
-            // const router = await fetch("");
-            // window.location.href = "/welcome";
-            const welcomeResponse = await fetch(
-              "http://localhost:5000/welcome",
-              {
-                method: "GET",
-                headers: {
-                  Authorization: `Bearer ${token}`, // Ensure you have the correct token here
-                },
-              }
-            );
 
-            if (welcomeResponse.ok) {
-              // Redirect to the welcome page after successful authentication
-              window.location.href = "/welcome"; // Simple client-side redirect
-            } else {
-              alert("Unable to access the welcome page");
-            }
+            // Redirect to the welcome page with the token in the query string
+            window.location.href = `/welcome?token=${token}`;
           } else {
             console.log(response);
             alert("Login failed");

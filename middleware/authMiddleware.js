@@ -1,20 +1,32 @@
 const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv");
+
+dotenv.config();
 
 const authMiddleware = (req, res, next) => {
-  const token = req.header("Authorization");
-  console.log(token);
-  // Ensure the token exists and is in the correct format
+  let token;
+  if (req.query.token) {
+    // Checking for token in the query parameters
+    token = req.query.token;
+  } else if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    token = req.headers.authorization.split(" ")[1];
+  }
 
-  // Extract the token part from the header (after "Bearer ")
-  const bearerToken = token.split(" ")[1];
-  console.log(bearerToken);
+  console.log("auth middleware: ", token);
+
+  if (!token) {
+    return res.status(401).send("Access Denied: No Token Provided");
+  }
 
   try {
-    const decoded = jwt.verify(bearerToken.value, process.env.JWT_SECRET);
-    req.user = decoded; // Attach the decoded user data to the request
+    const verified = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = verified;
     next();
   } catch (err) {
-    res.status(401).json({ msg: "Token is not valid" });
+    res.status(400).send("Invalid Token");
   }
 };
 
