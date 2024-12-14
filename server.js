@@ -97,11 +97,8 @@ require("dotenv").config();
 const connectDB = require("./config/db"); // Assuming your connectDB is correctly set up.
 const user_data = require("./routes/user_data");
 const axios = require("axios");
-const {
-  authMiddleware,
-  roleMiddleware,
-} = require("./middleware/authMiddleware");
-
+const { authMiddleware } = require("./middleware/authMiddleware");
+const Otp_route = require("./OTP/send_sms");
 const app = express();
 const mongoose = require("mongoose");
 
@@ -126,6 +123,7 @@ app.get("/welcome", authMiddleware, (req, res) => {
 // Routes
 app.use("/api/auth", require("./routes/auth"));
 app.use("/user", user_data);
+app.use("/OTP", Otp_route);
 
 // Your WeatherAPI key
 const weatherApiKey = "35ecd18235524c63b7594841242409"; // Replace with your API key
