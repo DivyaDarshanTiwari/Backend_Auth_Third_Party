@@ -126,7 +126,7 @@ app.use("/user", user_data);
 app.use("/OTP", Otp_route);
 
 // Your WeatherAPI key
-const weatherApiKey = "35ecd18235524c63b7594841242409"; // Replace with your API key
+const weatherApiKey = process.env.WEATHER_API_KEY; // Replace with your API key
 
 // Create a route to fetch weather data for Dehradun
 app.get("/weather", async (req, res) => {
